@@ -11,31 +11,45 @@ class NameHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        if (_genderIcon != null) ...<Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: AppDimens.xs),
-            child: Icon(
-              _genderIcon,
-              size: AppDimens.iconMd,
-              color: _genderColor,
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: AppDimens.nameRevealDuration,
+      curve: Curves.easeOutCubic,
+      builder: (BuildContext context, double value, Widget? child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, (1 - value) * AppDimens.nameRevealOffset),
+            child: child,
+          ),
+        );
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (_genderIcon != null) ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: AppDimens.xs),
+              child: Icon(
+                _genderIcon,
+                size: AppDimens.iconMd,
+                color: _genderColor,
+              ),
+            ),
+            const SizedBox(width: AppDimens.sm),
+          ],
+          Expanded(
+            child: Text(
+              profile.name ?? 'Unknown name',
+              style: const TextStyle(
+                fontSize: AppDimens.fontXl,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
-          const SizedBox(width: AppDimens.sm),
         ],
-        Expanded(
-          child: Text(
-            profile.name ?? 'Unknown name',
-            style: const TextStyle(
-              fontSize: AppDimens.fontXl,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 

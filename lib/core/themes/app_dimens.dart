@@ -38,4 +38,7 @@ abstract final class AppDimens {
   static const double fontMd = 16;
   static const double fontLg = 20;
   static const double fontXl = 24;
+
+  static const Duration nameRevealDuration = Duration(milliseconds: 600);
+  static const double nameRevealOffset = 24;
 }
