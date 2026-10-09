@@ -30,7 +30,7 @@ class ProfilesEmptyView extends StatelessWidget {
             ),
             SizedBox(height: AppDimens.lg),
             Text(
-              'No profiles match',
+              'No profiles match.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: AppDimens.fontMd,
@@ -98,7 +98,7 @@ class ProfileNotFoundView extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(AppDimens.xl),
         child: Text(
-          'This profile is not available',
+          'This profile is not available.',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: AppDimens.fontMd,
