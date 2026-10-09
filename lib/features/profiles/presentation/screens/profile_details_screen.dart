@@ -53,20 +53,61 @@ class _ProfileDetailsBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppDimens.lg),
       children: <Widget>[
-        Text(
-          profile.name ?? 'Unknown name',
-          style: const TextStyle(
-            fontSize: AppDimens.fontXl,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
-          ),
-        ),
+        _NameHeader(profile: profile),
         const SizedBox(height: AppDimens.lg),
         ProfileConnectionCard(connectedThrough: profile.connectedThrough),
         const SizedBox(height: AppDimens.lg),
+        ..._buildChips(),
+        const SizedBox(height: AppDimens.md),
         ..._buildDetailRows(),
       ],
     );
+  }
+
+  List<Widget> _buildChips() {
+    final List<Widget> chips = <Widget>[];
+
+    void addChip(String? value, IconData icon) {
+      if (value != null && value.isNotEmpty) {
+        chips.add(
+          Chip(
+            avatar: Icon(
+              icon,
+              size: AppDimens.iconSm,
+              color: AppColors.primary,
+            ),
+            label: Text(
+              value,
+              style: const TextStyle(
+                fontSize: AppDimens.fontSm,
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            backgroundColor: AppColors.background,
+            side: const BorderSide(color: AppColors.divider),
+            labelPadding: const EdgeInsets.symmetric(
+              horizontal: AppDimens.xs,
+            ),
+          ),
+        );
+      }
+    }
+
+    addChip(profile.city, Icons.location_city_outlined);
+    addChip(profile.community, Icons.people_outline);
+    addChip(profile.profession, Icons.work_outline);
+
+    if (chips.isEmpty) {
+      return const <Widget>[];
+    }
+    return <Widget>[
+      Wrap(
+        spacing: AppDimens.sm,
+        runSpacing: AppDimens.sm,
+        children: chips,
+      ),
+    ];
   }
 
   List<Widget> _buildDetailRows() {
@@ -79,25 +120,55 @@ class _ProfileDetailsBody extends StatelessWidget {
     }
 
     addRow('Age', profile.age?.toString());
-    addRow('Gender', _genderLabel(profile.gender));
-    addRow('City', profile.city);
-    addRow('Community', profile.community);
-    addRow('Profession', profile.profession);
     addRow('Education', profile.education);
     addRow('Degree', profile.degree?.toString());
     addRow('About', profile.about);
 
     return rows;
   }
+}
 
-  String? _genderLabel(String? gender) {
-    switch (gender) {
-      case 'M':
-        return 'Male';
-      case 'F':
-        return 'Female';
-      default:
-        return gender;
-    }
+class _NameHeader extends StatelessWidget {
+  const _NameHeader({required this.profile});
+
+  final Profile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        if (_genderIcon != null) ...<Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: AppDimens.xs),
+            child: Icon(
+              _genderIcon,
+              size: AppDimens.iconMd,
+              color: _genderColor,
+            ),
+          ),
+          const SizedBox(width: AppDimens.sm),
+        ],
+        Expanded(
+          child: Text(
+            profile.name ?? 'Unknown name',
+            style: const TextStyle(
+              fontSize: AppDimens.fontXl,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ),
+      ],
+    );
   }
+
+  IconData? get _genderIcon => switch (profile.gender) {
+    'M' => Icons.male,
+    'F' => Icons.female,
+    _ => null,
+  };
+
+  Color get _genderColor =>
+      profile.gender == 'F' ? AppColors.genderFemale : AppColors.genderMale;
 }
