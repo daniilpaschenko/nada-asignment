@@ -5,14 +5,21 @@ import '../../../../core/themes/app_dimens.dart';
 import '../../domain/entities/profile.dart';
 
 class ProfileListTile extends StatelessWidget {
-  const ProfileListTile({required this.profile, this.onTap, super.key});
+  const ProfileListTile({
+    required this.profile,
+    this.query = '',
+    this.onTap,
+    super.key,
+  });
 
   final Profile profile;
+  final String query;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final String? connectedThrough = profile.connectedThrough;
+    final String connectedThrough = profile.connectedThrough ?? '';
+    final bool hasConnection = connectedThrough.isNotEmpty;
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -26,38 +33,51 @@ class ProfileListTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              _InitialAvatar(name: profile.name),
+              const SizedBox(width: AppDimens.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      profile.name ?? 'Unknown name',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: AppDimens.fontMd,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        if (_genderIcon != null) ...<Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: AppDimens.xs),
+                            child: Icon(
+                              _genderIcon,
+                              size: AppDimens.iconSm,
+                              color: _genderColor,
+                            ),
+                          ),
+                          const SizedBox(width: AppDimens.xs),
+                        ],
+                        Expanded(
+                          child: Text.rich(
+                            TextSpan(children: _highlightedName),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: AppDimens.xs),
-                    Text(
-                      _subtitle,
+                    Text.rich(
+                      TextSpan(children: _subtitleSpans),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: AppDimens.fontSm,
-                        color: AppColors.textSecondary,
-                      ),
                     ),
-                    if (connectedThrough != null &&
-                        connectedThrough.isNotEmpty) ...<Widget>[
-                      const SizedBox(height: AppDimens.sm),
+                    const SizedBox(height: AppDimens.sm),
+                    if (hasConnection)
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Padding(
-                            padding: EdgeInsets.only(top: 2, right: AppDimens.xs),
+                            padding: EdgeInsets.only(
+                              top: 2,
+                              right: AppDimens.xs,
+                            ),
                             child: Icon(
                               Icons.link,
                               size: AppDimens.iconSm,
@@ -76,14 +96,45 @@ class ProfileListTile extends StatelessWidget {
                             ),
                           ),
                         ],
+                      )
+                    else
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 2,
+                              right: AppDimens.xs,
+                            ),
+                            child: Icon(
+                              Icons.link_off,
+                              size: AppDimens.iconSm,
+                              color: AppColors.disabled,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'No connection yet',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: AppDimens.fontSm,
+                                color: AppColors.textSecondary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
                   ],
                 ),
               ),
               if (onTap != null)
                 const Padding(
-                  padding: EdgeInsets.only(left: AppDimens.sm, top: AppDimens.xs),
+                  padding: EdgeInsets.only(
+                    left: AppDimens.sm,
+                    top: AppDimens.xs,
+                  ),
                   child: Icon(
                     Icons.chevron_right,
                     size: AppDimens.iconMd,
@@ -97,14 +148,120 @@ class ProfileListTile extends StatelessWidget {
     );
   }
 
-  String get _subtitle {
-    final List<String> parts = <String>[];
-    if (profile.age != null) {
-      parts.add('${profile.age} years');
+  IconData? get _genderIcon => switch (profile.gender) {
+    'M' => Icons.male,
+    'F' => Icons.female,
+    _ => null,
+  };
+
+  Color get _genderColor =>
+      profile.gender == 'F' ? AppColors.genderFemale : AppColors.genderMale;
+
+  List<InlineSpan> get _highlightedName {
+    const TextStyle base = TextStyle(
+      fontSize: AppDimens.fontMd,
+      fontWeight: FontWeight.w600,
+      color: AppColors.textPrimary,
+    );
+    final String name = profile.name ?? 'Unknown name';
+    return _highlightOccurrences(name, query, baseTextStyle: base);
+  }
+
+  List<InlineSpan> get _subtitleSpans {
+    const TextStyle base = TextStyle(
+      fontSize: AppDimens.fontSm,
+      color: AppColors.textSecondary,
+    );
+    final List<InlineSpan> spans = <InlineSpan>[];
+    final int? age = profile.age;
+    final String? city = profile.city;
+
+    if (age != null) {
+      spans.add(TextSpan(text: '$age years', style: base));
     }
-    if (profile.city != null && profile.city!.isNotEmpty) {
-      parts.add(profile.city!);
+    if (age != null && city != null && city.isNotEmpty) {
+      spans.add(const TextSpan(text: ' · ', style: base));
     }
-    return parts.isEmpty ? 'No details' : parts.join(' · ');
+    if (city != null && city.isNotEmpty) {
+      spans.addAll(_highlightOccurrences(city, query, baseTextStyle: base));
+    }
+    if (spans.isEmpty) {
+      spans.add(const TextSpan(text: 'No details', style: base));
+    }
+    return spans;
+  }
+
+  List<InlineSpan> _highlightOccurrences(
+    String text,
+    String search, {
+    required TextStyle baseTextStyle,
+  }) {
+    final String trimmedSearch = search.trim();
+    if (trimmedSearch.isEmpty) {
+      return <InlineSpan>[TextSpan(text: text, style: baseTextStyle)];
+    }
+
+    final String lowerText = text.toLowerCase();
+    final String lowerSearch = trimmedSearch.toLowerCase();
+    final List<InlineSpan> spans = <InlineSpan>[];
+    final TextStyle highlight = baseTextStyle.merge(
+      const TextStyle(
+        backgroundColor: AppColors.searchHighlightBackground,
+        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+
+    int cursor = 0;
+    while (cursor < text.length) {
+      final int match = lowerText.indexOf(lowerSearch, cursor);
+      if (match == -1) {
+        spans.add(
+          TextSpan(text: text.substring(cursor), style: baseTextStyle),
+        );
+        break;
+      }
+      if (match > cursor) {
+        spans.add(
+          TextSpan(text: text.substring(cursor, match), style: baseTextStyle),
+        );
+      }
+      spans.add(
+        TextSpan(
+          text: text.substring(match, match + lowerSearch.length),
+          style: highlight,
+        ),
+      );
+      cursor = match + lowerSearch.length;
+    }
+    return spans;
+  }
+}
+
+class _InitialAvatar extends StatelessWidget {
+  const _InitialAvatar({required this.name});
+
+  final String? name;
+
+  @override
+  Widget build(BuildContext context) {
+    final String initial =
+        (name == null || name!.isEmpty) ? '?' : name!.trim()[0].toUpperCase();
+    final Color color =
+        AppColors.avatarPalette[(name?.hashCode ?? 0).abs() %
+            AppColors.avatarPalette.length];
+
+    return CircleAvatar(
+      radius: AppDimens.avatarRadius,
+      backgroundColor: color,
+      child: Text(
+        initial,
+        style: const TextStyle(
+          color: AppColors.onAvatar,
+          fontSize: AppDimens.fontLg,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }
