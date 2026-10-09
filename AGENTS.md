@@ -86,7 +86,7 @@ https://gist.githubusercontent.com/jordandivyansh/c96fa18f141e0abb904e394eb91fba
 1. Dependencies: `flutter_riverpod`, `riverpod_annotation`, `go_router`, `retrofit`,
    `dio`, `get_it`, `injectable`, `freezed_annotation`, `json_annotation`.
 2. Dev dependencies: `build_runner`, `riverpod_generator`, `retrofit_generator`,
-   `injectable_generator`, `json_serializable`, `freezed`, `custom_lint`, `riverpod_lint`.
+   `injectable_generator`, `json_serializable`, `freezed`, `riverpod_lint`.
 3. Настроить `analysis_options.yaml` и `build.yaml` (пути генерации, отключение лишнего вывода).
 
 ### Этап 2. Core-слой
