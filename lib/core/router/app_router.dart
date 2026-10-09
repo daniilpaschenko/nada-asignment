@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/profiles/presentation/screens/profile_details_screen.dart';
+import '../../features/profiles/presentation/screens/profiles_list_screen.dart';
 import 'app_routes.dart';
 
 part 'app_router.g.dart';
@@ -15,28 +17,17 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.home,
         name: AppRoutes.homeName,
         builder: (BuildContext context, GoRouterState state) =>
-            const _PlaceholderScreen(title: 'Profiles'),
+            const ProfilesListScreen(),
       ),
       GoRoute(
         path: AppRoutes.profileDetails,
         name: AppRoutes.profileDetailsName,
-        builder: (BuildContext context, GoRouterState state) =>
-            _PlaceholderScreen(title: 'Profile ${state.pathParameters['id']}'),
+        builder: (BuildContext context, GoRouterState state) {
+          final int profileId =
+              int.tryParse(state.pathParameters['id'] ?? '') ?? -1;
+          return ProfileDetailsScreen(profileId: profileId);
+        },
       ),
     ],
   );
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text(title)),
-    );
-  }
 }
