@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/themes/app_dimens.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
@@ -41,34 +42,36 @@ class ProfilesListScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: ResponsiveContent(
-          child: Column(
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(AppDimens.lg),
-                child: ProfilesSearchField(),
-              ),
-              Expanded(
-                child: profilesAsync.when(
-                  data: (List<Profile> profiles) => ProfileListView(
-                    profiles: profiles,
-                    query: ref.watch(profilesSearchQueryProvider),
-                    onProfileTap: (int id) => context.pushNamed(
-                      AppRoutes.profileDetailsName,
-                      pathParameters: <String, String>{'id': id.toString()},
-                    ),
-                  ),
-                  loading: ProfilesLoadingView.new,
-                  error: (Object error, StackTrace stackTrace) =>
-                      ProfilesErrorView(
-                        message: mapExceptionToFailure(error).message,
-                        onRetry: () =>
-                            ref.read(profilesProvider.notifier).retry(),
-                      ),
+      body: AppBackground(
+        child: SafeArea(
+          child: ResponsiveContent(
+            child: Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(AppDimens.lg),
+                  child: ProfilesSearchField(),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: profilesAsync.when(
+                    data: (List<Profile> profiles) => ProfileListView(
+                      profiles: profiles,
+                      query: ref.watch(profilesSearchQueryProvider),
+                      onProfileTap: (int id) => context.pushNamed(
+                        AppRoutes.profileDetailsName,
+                        pathParameters: <String, String>{'id': id.toString()},
+                      ),
+                    ),
+                    loading: ProfilesLoadingView.new,
+                    error: (Object error, StackTrace stackTrace) =>
+                        ProfilesErrorView(
+                          message: mapExceptionToFailure(error).message,
+                          onRetry: () =>
+                              ref.read(profilesProvider.notifier).retry(),
+                        ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

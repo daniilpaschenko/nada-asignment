@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/error_mapper.dart';
+import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
@@ -23,21 +24,25 @@ class ProfileDetailsScreen extends ConsumerWidget {
         title: 'Profile details',
         subtitle: 'Full information',
       ),
-      body: SafeArea(
-        child: profilesAsync.when(
-          data: (List<Profile> profiles) {
-            final Profile? profile = ref.watch(profileByIdProvider(profileId));
-            if (profile == null) {
-              return const ProfileNotFoundView();
-            }
-            return ResponsiveContent(
-              child: ProfileDetailsBody(profile: profile),
-            );
-          },
-          loading: ProfilesLoadingView.new,
-          error: (Object error, StackTrace stackTrace) => ProfilesErrorView(
-            message: mapExceptionToFailure(error).message,
-            onRetry: () => ref.read(profilesProvider.notifier).retry(),
+      body: AppBackground(
+        child: SafeArea(
+          child: profilesAsync.when(
+            data: (List<Profile> profiles) {
+              final Profile? profile = ref.watch(
+                profileByIdProvider(profileId),
+              );
+              if (profile == null) {
+                return const ProfileNotFoundView();
+              }
+              return ResponsiveContent(
+                child: ProfileDetailsBody(profile: profile),
+              );
+            },
+            loading: ProfilesLoadingView.new,
+            error: (Object error, StackTrace stackTrace) => ProfilesErrorView(
+              message: mapExceptionToFailure(error).message,
+              onRetry: () => ref.read(profilesProvider.notifier).retry(),
+            ),
           ),
         ),
       ),

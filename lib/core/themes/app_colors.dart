@@ -28,6 +28,8 @@ abstract final class AppColors {
   ];
 
   static const Color background = Color(0xFFF7F8FA);
+  static const Color backgroundGradientStart = Color(0xFFEDF2FF);
+  static const Color backgroundGradientEnd = background;
   static const Color surface = Color(0xFFFFFFFF);
 
   static const Color textPrimary = Color(0xFF1A1D23);
