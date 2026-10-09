@@ -41,6 +41,7 @@ abstract final class AppColors {
 
   static const Color highlightBackground = Color(0xFFEAF0FF);
   static const Color highlightBorder = Color(0xFF2F6BFF);
+  static const Color cardShadow = Color(0x14000000);
 
   static const Color error = Color(0xFFD93A3A);
 }

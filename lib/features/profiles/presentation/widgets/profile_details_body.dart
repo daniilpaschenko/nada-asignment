@@ -50,9 +50,7 @@ class ProfileDetailsBody extends StatelessWidget {
             ),
             backgroundColor: AppColors.background,
             side: const BorderSide(color: AppColors.divider),
-            labelPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimens.xs,
-            ),
+            labelPadding: const EdgeInsets.symmetric(horizontal: AppDimens.xs),
           ),
         );
       }
@@ -66,27 +64,27 @@ class ProfileDetailsBody extends StatelessWidget {
       return const <Widget>[];
     }
     return <Widget>[
-      Wrap(
-        spacing: AppDimens.sm,
-        runSpacing: AppDimens.sm,
-        children: chips,
-      ),
+      Wrap(spacing: AppDimens.sm, runSpacing: AppDimens.sm, children: chips),
     ];
   }
 
   List<Widget> _buildDetailRows() {
     final List<Widget> rows = <Widget>[];
 
-    void addRow(String label, String? value) {
+    void addRow(String label, String? value, IconData icon) {
       if (value != null && value.isNotEmpty) {
-        rows.add(ProfileDetailRow(label: label, value: value));
+        rows.add(ProfileDetailRow(label: label, value: value, icon: icon));
       }
     }
 
-    addRow('Age', profile.age?.toString());
-    addRow('Education', profile.education);
-    addRow('Degree', profile.degree?.toString());
-    addRow('About', profile.about);
+    addRow('Age', profile.age?.toString(), Icons.cake_outlined);
+    addRow('Education', profile.education, Icons.school_outlined);
+    addRow(
+      'Degree',
+      profile.degree?.toString(),
+      Icons.workspace_premium_outlined,
+    );
+    addRow('About', profile.about, Icons.info_outline);
 
     return rows;
   }

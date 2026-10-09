@@ -20,6 +20,9 @@ abstract final class AppDimens {
 
   static const double elevationSm = 1;
   static const double borderWidth = 1;
+  static const double cardShadowBlur = 12;
+  static const double cardShadowOffsetY = 4;
+  static const double iconBadgeSize = 40;
 
   static const double iconSm = 18;
   static const double iconMd = 24;
