@@ -16,6 +16,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions = const <Widget>[],
     this.showBackButton = true,
     this.toolbarHeight = AppDimens.appBarHeight,
+    this.contentMaxWidth = AppDimens.maxContentWidth,
     super.key,
   });
 
@@ -24,6 +25,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
   final bool showBackButton;
   final double toolbarHeight;
+  final double contentMaxWidth;
 
   @override
   Size get preferredSize => Size.fromHeight(toolbarHeight);
@@ -80,59 +82,64 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
                 child: _GlowOrb(size: AppDimens.appBarGlowSmall, subtle: true),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppDimens.sm),
-                child: Row(
-                  children: <Widget>[
-                    if (canGoBack)
-                      AppTopBarAction(
-                        icon: Icons.arrow_back_rounded,
-                        onPressed: onBack,
-                      )
-                    else
-                      const SizedBox(width: AppDimens.sm),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppDimens.md,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppColors.onPrimary,
-                                fontSize: AppDimens.fontLg,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.2,
-                              ),
+                padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: contentMaxWidth),
+                    child: Row(
+                      children: <Widget>[
+                        if (canGoBack)
+                          AppTopBarAction(
+                            icon: Icons.arrow_back_rounded,
+                            onPressed: onBack,
+                          )
+                        else
+                          const SizedBox(width: AppDimens.sm),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppDimens.md,
                             ),
-                            if (subtitle != null) ...<Widget>[
-                              const SizedBox(height: AppDimens.xs / 2),
-                              Text(
-                                subtitle!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: AppColors.onPrimaryMuted,
-                                  fontSize: AppDimens.fontXs,
-                                  fontWeight: FontWeight.w500,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: AppColors.onPrimary,
+                                    fontSize: AppDimens.fontLg,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.2,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ],
+                                if (subtitle != null) ...<Widget>[
+                                  const SizedBox(height: AppDimens.xs / 2),
+                                  Text(
+                                    subtitle!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: AppColors.onPrimaryMuted,
+                                      fontSize: AppDimens.fontXs,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                        for (final Widget action in actions) ...<Widget>[
+                          action,
+                          const SizedBox(width: AppDimens.xs),
+                        ],
+                        const SizedBox(width: AppDimens.xs),
+                      ],
                     ),
-                    for (final Widget action in actions) ...<Widget>[
-                      action,
-                      const SizedBox(width: AppDimens.xs),
-                    ],
-                    const SizedBox(width: AppDimens.xs),
-                  ],
+                  ),
                 ),
               ),
             ],
