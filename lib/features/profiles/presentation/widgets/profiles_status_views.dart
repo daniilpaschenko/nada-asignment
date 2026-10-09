@@ -88,3 +88,24 @@ class ProfilesErrorView extends StatelessWidget {
     );
   }
 }
+
+class ProfileNotFoundView extends StatelessWidget {
+  const ProfileNotFoundView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(AppDimens.xl),
+        child: Text(
+          'This profile is not available',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: AppDimens.fontMd,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ),
+    );
+  }
+}

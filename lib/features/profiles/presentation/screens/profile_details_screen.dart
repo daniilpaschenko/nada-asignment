@@ -26,7 +26,7 @@ class ProfileDetailsScreen extends ConsumerWidget {
           data: (List<Profile> profiles) {
             final Profile? profile = ref.watch(profileByIdProvider(profileId));
             if (profile == null) {
-              return const _ProfileNotFoundView();
+              return const ProfileNotFoundView();
             }
             return ResponsiveContent(
               child: _ProfileDetailsBody(profile: profile),
@@ -99,26 +99,5 @@ class _ProfileDetailsBody extends StatelessWidget {
       default:
         return gender;
     }
-  }
-}
-
-class _ProfileNotFoundView extends StatelessWidget {
-  const _ProfileNotFoundView();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(AppDimens.xl),
-        child: Text(
-          'This profile is not available.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: AppDimens.fontMd,
-            color: AppColors.textSecondary,
-          ),
-        ),
-      ),
-    );
   }
 }
