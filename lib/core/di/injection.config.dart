@@ -16,7 +16,7 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/profiles/data/datasources/profiles_api.dart' as _i1062;
 import '../../features/profiles/data/repositories/profiles_repository.dart'
-    as _i896;
+    as _i282;
 import '../../features/profiles/domain/interfaces/profiles_repository.dart'
     as _i696;
 import '../../features/profiles/domain/usecases/filter_profiles.dart' as _i562;
@@ -38,7 +38,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => profilesApiModule.provideProfilesApi(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i696.ProfilesInterface>(
-      () => _i896.ProfilesRepository(gh<_i1062.ProfilesApi>()),
+      () => _i282.ProfilesRepository(gh<_i1062.ProfilesApi>()),
     );
     gh.lazySingleton<_i1059.GetProfiles>(
       () => _i1059.GetProfiles(gh<_i696.ProfilesInterface>()),
