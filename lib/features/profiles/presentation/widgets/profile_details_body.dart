@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_dimens.dart';
 import '../../domain/entities/profile.dart';
 import 'name_header.dart';
@@ -21,51 +20,9 @@ class ProfileDetailsBody extends StatelessWidget {
         const SizedBox(height: AppDimens.lg),
         ProfileConnectionCard(connectedThrough: profile.connectedThrough),
         const SizedBox(height: AppDimens.lg),
-        ..._buildChips(),
-        const SizedBox(height: AppDimens.md),
         ..._buildDetailRows(),
       ],
     );
-  }
-
-  List<Widget> _buildChips() {
-    final List<Widget> chips = <Widget>[];
-
-    void addChip(String? value, IconData icon) {
-      if (value != null && value.isNotEmpty) {
-        chips.add(
-          Chip(
-            avatar: Icon(
-              icon,
-              size: AppDimens.iconSm,
-              color: AppColors.primary,
-            ),
-            label: Text(
-              value,
-              style: const TextStyle(
-                fontSize: AppDimens.fontSm,
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            backgroundColor: AppColors.background,
-            side: const BorderSide(color: AppColors.divider),
-            labelPadding: const EdgeInsets.symmetric(horizontal: AppDimens.xs),
-          ),
-        );
-      }
-    }
-
-    addChip(profile.city, Icons.location_city_outlined);
-    addChip(profile.community, Icons.people_outline);
-    addChip(profile.profession, Icons.work_outline);
-
-    if (chips.isEmpty) {
-      return const <Widget>[];
-    }
-    return <Widget>[
-      Wrap(spacing: AppDimens.sm, runSpacing: AppDimens.sm, children: chips),
-    ];
   }
 
   List<Widget> _buildDetailRows() {
@@ -77,6 +34,9 @@ class ProfileDetailsBody extends StatelessWidget {
       }
     }
 
+    addRow('City', profile.city, Icons.location_city_outlined);
+    addRow('Community', profile.community, Icons.people_outline);
+    addRow('Profession', profile.profession, Icons.work_outline);
     addRow('Age', profile.age?.toString(), Icons.cake_outlined);
     addRow('Education', profile.education, Icons.school_outlined);
     addRow(
