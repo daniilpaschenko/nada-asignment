@@ -8,69 +8,113 @@ class ProfileDetailRow extends StatelessWidget {
     required this.label,
     required this.value,
     required this.icon,
+    this.compact = false,
     super.key,
   });
 
   final String label;
   final String value;
   final IconData icon;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppDimens.md),
-      child: Container(
-        padding: const EdgeInsets.all(AppDimens.lg),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppDimens.radiusMd),
-          border: Border.all(
-            color: AppColors.divider,
-            width: AppDimens.borderWidth,
+    return compact ? _buildCompact() : _buildRegular();
+  }
+
+  Widget _buildRegular() {
+    return Container(
+      padding: const EdgeInsets.all(AppDimens.lg),
+      decoration: _cardDecoration,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _IconBadge(icon: icon),
+          const SizedBox(width: AppDimens.md),
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: AppDimens.fontXs,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+                const SizedBox(height: AppDimens.xs),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: AppDimens.fontMd,
+                    color: AppColors.textPrimary,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
           ),
-          boxShadow: const <BoxShadow>[
-            BoxShadow(
-              color: AppColors.cardShadow,
-              blurRadius: AppDimens.cardShadowBlur,
-              offset: Offset(0, AppDimens.cardShadowOffsetY),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _IconBadge(icon: icon),
-            const SizedBox(width: AppDimens.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: AppDimens.fontXs,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                  const SizedBox(height: AppDimens.xs),
-                  Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: AppDimens.fontMd,
-                      color: AppColors.textPrimary,
-                      height: 1.35,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
+
+  Widget _buildCompact() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimens.lg,
+        vertical: AppDimens.md,
+      ),
+      decoration: _cardDecoration,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          _IconBadge(icon: icon),
+          const SizedBox(width: AppDimens.md),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: AppDimens.fontXs,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                  letterSpacing: 0.4,
+                ),
+              ),
+              const SizedBox(height: AppDimens.xs),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: AppDimens.fontMd,
+                  color: AppColors.textPrimary,
+                  height: 1.35,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration get _cardDecoration => BoxDecoration(
+    color: AppColors.surface,
+    borderRadius: BorderRadius.circular(AppDimens.radiusMd),
+    border: Border.all(color: AppColors.divider, width: AppDimens.borderWidth),
+    boxShadow: const <BoxShadow>[
+      BoxShadow(
+        color: AppColors.cardShadow,
+        blurRadius: AppDimens.cardShadowBlur,
+        offset: Offset(0, AppDimens.cardShadowOffsetY),
+      ),
+    ],
+  );
 }
 
 class _IconBadge extends StatelessWidget {
