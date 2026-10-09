@@ -99,11 +99,13 @@ class _DetailSection extends StatelessWidget {
   }
 
   Widget _pairChild(_ProfileField field) {
-    if (field.compact) {
+    if (field.compact && !_allCompact) {
       return _card(field);
     }
     return Expanded(child: _card(field));
   }
+
+  bool get _allCompact => cards.every((_ProfileField field) => field.compact);
 
   Widget _card(_ProfileField field) {
     return ProfileDetailRow(
