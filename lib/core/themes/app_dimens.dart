@@ -41,4 +41,6 @@ abstract final class AppDimens {
 
   static const Duration nameRevealDuration = Duration(milliseconds: 600);
   static const double nameRevealOffset = 24;
+
+  static const Duration routeTransitionDuration = Duration(milliseconds: 320);
 }

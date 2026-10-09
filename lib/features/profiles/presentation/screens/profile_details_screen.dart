@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/error_mapper.dart';
+import '../../../../core/themes/app_dimens.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
@@ -26,22 +27,33 @@ class ProfileDetailsScreen extends ConsumerWidget {
       ),
       body: AppBackground(
         child: SafeArea(
-          child: profilesAsync.when(
-            data: (List<Profile> profiles) {
-              final Profile? profile = ref.watch(
-                profileByIdProvider(profileId),
-              );
-              if (profile == null) {
-                return const ProfileNotFoundView();
-              }
-              return ResponsiveContent(
-                child: ProfileDetailsBody(profile: profile),
-              );
+          child: TweenAnimationBuilder<Offset>(
+            tween: Tween<Offset>(
+              begin: const Offset(0.25, 0),
+              end: Offset.zero,
+            ),
+            duration: AppDimens.routeTransitionDuration,
+            curve: Curves.easeOutCubic,
+            builder: (BuildContext context, Offset value, Widget? child) {
+              return FractionalTranslation(translation: value, child: child);
             },
-            loading: ProfilesLoadingView.new,
-            error: (Object error, StackTrace stackTrace) => ProfilesErrorView(
-              message: mapExceptionToFailure(error).message,
-              onRetry: () => ref.read(profilesProvider.notifier).retry(),
+            child: profilesAsync.when(
+              data: (List<Profile> profiles) {
+                final Profile? profile = ref.watch(
+                  profileByIdProvider(profileId),
+                );
+                if (profile == null) {
+                  return const ProfileNotFoundView();
+                }
+                return ResponsiveContent(
+                  child: ProfileDetailsBody(profile: profile),
+                );
+              },
+              loading: ProfilesLoadingView.new,
+              error: (Object error, StackTrace stackTrace) => ProfilesErrorView(
+                message: mapExceptionToFailure(error).message,
+                onRetry: () => ref.read(profilesProvider.notifier).retry(),
+              ),
             ),
           ),
         ),
