@@ -19,85 +19,48 @@ class ProfileDetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return compact ? _buildCompact() : _buildRegular();
-  }
+    final EdgeInsets padding = compact
+        ? const EdgeInsets.symmetric(
+            horizontal: AppDimens.lg,
+            vertical: AppDimens.md,
+          )
+        : const EdgeInsets.all(AppDimens.lg);
 
-  Widget _buildRegular() {
+    final Widget content = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: AppDimens.fontXs,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
+            letterSpacing: 0.4,
+          ),
+        ),
+        const SizedBox(height: AppDimens.xs),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: AppDimens.fontMd,
+            color: AppColors.textPrimary,
+            height: 1.35,
+          ),
+        ),
+      ],
+    );
+
     return Container(
-      padding: const EdgeInsets.all(AppDimens.lg),
+      padding: padding,
       decoration: _cardDecoration,
       child: Row(
+        mainAxisSize: compact ? MainAxisSize.min : MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _IconBadge(icon: icon),
           const SizedBox(width: AppDimens.md),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: AppDimens.fontXs,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-                const SizedBox(height: AppDimens.xs),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: AppDimens.fontMd,
-                    color: AppColors.textPrimary,
-                    height: 1.35,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCompact() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimens.lg,
-        vertical: AppDimens.md,
-      ),
-      decoration: _cardDecoration,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          _IconBadge(icon: icon),
-          const SizedBox(width: AppDimens.md),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: AppDimens.fontXs,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textSecondary,
-                  letterSpacing: 0.4,
-                ),
-              ),
-              const SizedBox(height: AppDimens.xs),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: AppDimens.fontMd,
-                  color: AppColors.textPrimary,
-                  height: 1.35,
-                ),
-              ),
-            ],
-          ),
+          if (compact) content else Expanded(child: content),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_dimens.dart';
 import '../../domain/entities/profile.dart';
+import 'profile_gender_presentation.dart';
 
 class NameHeader extends StatelessWidget {
   const NameHeader({required this.profile, super.key});
@@ -27,13 +28,13 @@ class NameHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (_genderIcon != null) ...<Widget>[
+          if (profile.genderIcon != null) ...<Widget>[
             Padding(
               padding: const EdgeInsets.only(top: AppDimens.xs),
               child: Icon(
-                _genderIcon,
+                profile.genderIcon,
                 size: AppDimens.iconMd,
-                color: _genderColor,
+                color: profile.genderColor,
               ),
             ),
             const SizedBox(width: AppDimens.sm),
@@ -52,13 +53,4 @@ class NameHeader extends StatelessWidget {
       ),
     );
   }
-
-  IconData? get _genderIcon => switch (profile.gender) {
-    'M' => Icons.male,
-    'F' => Icons.female,
-    _ => null,
-  };
-
-  Color get _genderColor =>
-      profile.gender == 'F' ? AppColors.genderFemale : AppColors.genderMale;
 }

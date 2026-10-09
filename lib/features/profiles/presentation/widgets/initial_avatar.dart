@@ -10,8 +10,9 @@ class InitialAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String initial =
-        (name == null || name!.isEmpty) ? '?' : name!.trim()[0].toUpperCase();
+    final String initial = (name == null || name!.isEmpty)
+        ? '?'
+        : name!.trim()[0].toUpperCase();
     final Color color =
         AppColors.avatarPalette[(name?.hashCode ?? 0).abs() %
             AppColors.avatarPalette.length];

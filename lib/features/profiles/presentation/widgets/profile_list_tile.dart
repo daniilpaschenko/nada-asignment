@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_dimens.dart';
 import '../../domain/entities/profile.dart';
+import 'highlight_occurrences.dart';
 import 'initial_avatar.dart';
+import 'profile_gender_presentation.dart';
 
 class ProfileListTile extends StatelessWidget {
   const ProfileListTile({
@@ -43,13 +45,13 @@ class ProfileListTile extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        if (_genderIcon != null) ...<Widget>[
+                        if (profile.genderIcon != null) ...<Widget>[
                           Padding(
                             padding: const EdgeInsets.only(top: AppDimens.xs),
                             child: Icon(
-                              _genderIcon,
+                              profile.genderIcon,
                               size: AppDimens.iconSm,
-                              color: _genderColor,
+                              color: profile.genderColor,
                             ),
                           ),
                           const SizedBox(width: AppDimens.xs),
@@ -149,15 +151,6 @@ class ProfileListTile extends StatelessWidget {
     );
   }
 
-  IconData? get _genderIcon => switch (profile.gender) {
-    'M' => Icons.male,
-    'F' => Icons.female,
-    _ => null,
-  };
-
-  Color get _genderColor =>
-      profile.gender == 'F' ? AppColors.genderFemale : AppColors.genderMale;
-
   List<InlineSpan> get _highlightedName {
     const TextStyle base = TextStyle(
       fontSize: AppDimens.fontMd,
@@ -165,7 +158,7 @@ class ProfileListTile extends StatelessWidget {
       color: AppColors.textPrimary,
     );
     final String name = profile.name ?? 'Unknown name';
-    return _highlightOccurrences(name, query, baseTextStyle: base);
+    return highlightOccurrences(name, query, baseTextStyle: base);
   }
 
   List<InlineSpan> get _subtitleSpans {
@@ -184,56 +177,10 @@ class ProfileListTile extends StatelessWidget {
       spans.add(const TextSpan(text: ' · ', style: base));
     }
     if (city != null && city.isNotEmpty) {
-      spans.addAll(_highlightOccurrences(city, query, baseTextStyle: base));
+      spans.addAll(highlightOccurrences(city, query, baseTextStyle: base));
     }
     if (spans.isEmpty) {
       spans.add(const TextSpan(text: 'No details', style: base));
-    }
-    return spans;
-  }
-
-  List<InlineSpan> _highlightOccurrences(
-    String text,
-    String search, {
-    required TextStyle baseTextStyle,
-  }) {
-    final String trimmedSearch = search.trim();
-    if (trimmedSearch.isEmpty) {
-      return <InlineSpan>[TextSpan(text: text, style: baseTextStyle)];
-    }
-
-    final String lowerText = text.toLowerCase();
-    final String lowerSearch = trimmedSearch.toLowerCase();
-    final List<InlineSpan> spans = <InlineSpan>[];
-    final TextStyle highlight = baseTextStyle.merge(
-      const TextStyle(
-        backgroundColor: AppColors.searchHighlightBackground,
-        color: AppColors.textPrimary,
-        fontWeight: FontWeight.w700,
-      ),
-    );
-
-    int cursor = 0;
-    while (cursor < text.length) {
-      final int match = lowerText.indexOf(lowerSearch, cursor);
-      if (match == -1) {
-        spans.add(
-          TextSpan(text: text.substring(cursor), style: baseTextStyle),
-        );
-        break;
-      }
-      if (match > cursor) {
-        spans.add(
-          TextSpan(text: text.substring(cursor, match), style: baseTextStyle),
-        );
-      }
-      spans.add(
-        TextSpan(
-          text: text.substring(match, match + lowerSearch.length),
-          style: highlight,
-        ),
-      );
-      cursor = match + lowerSearch.length;
     }
     return spans;
   }

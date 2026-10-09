@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/error/error_mapper.dart';
-import '../../../../core/themes/app_dimens.dart';
 import '../../../../core/widgets/app_background.dart';
 import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
+import '../../../../core/widgets/slide_fade_in.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profiles_providers.dart';
 import '../widgets/profile_details_body.dart';
+import '../widgets/profiles_async_view.dart';
 import '../widgets/profiles_status_views.dart';
 
 class ProfileDetailsScreen extends ConsumerWidget {
@@ -27,18 +27,11 @@ class ProfileDetailsScreen extends ConsumerWidget {
       ),
       body: AppBackground(
         child: SafeArea(
-          child: TweenAnimationBuilder<Offset>(
-            tween: Tween<Offset>(
-              begin: const Offset(0.25, 0),
-              end: Offset.zero,
-            ),
-            duration: AppDimens.routeTransitionDuration,
-            curve: Curves.easeOutCubic,
-            builder: (BuildContext context, Offset value, Widget? child) {
-              return FractionalTranslation(translation: value, child: child);
-            },
-            child: profilesAsync.when(
-              data: (List<Profile> profiles) {
+          child: SlideFadeIn(
+            child: ProfilesAsyncView(
+              value: profilesAsync,
+              onRetry: () => ref.read(profilesProvider.notifier).retry(),
+              dataBuilder: (List<Profile> profiles) {
                 final Profile? profile = ref.watch(
                   profileByIdProvider(profileId),
                 );
@@ -49,11 +42,6 @@ class ProfileDetailsScreen extends ConsumerWidget {
                   child: ProfileDetailsBody(profile: profile),
                 );
               },
-              loading: ProfilesLoadingView.new,
-              error: (Object error, StackTrace stackTrace) => ProfilesErrorView(
-                message: mapExceptionToFailure(error).message,
-                onRetry: () => ref.read(profilesProvider.notifier).retry(),
-              ),
             ),
           ),
         ),

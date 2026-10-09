@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/error/error_mapper.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/themes/app_dimens.dart';
 import '../../../../core/widgets/app_background.dart';
@@ -11,8 +10,8 @@ import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profiles_providers.dart';
 import '../widgets/profile_list_view.dart';
+import '../widgets/profiles_async_view.dart';
 import '../widgets/profiles_search_field.dart';
-import '../widgets/profiles_status_views.dart';
 
 class ProfilesListScreen extends ConsumerWidget {
   const ProfilesListScreen({super.key});
@@ -52,8 +51,10 @@ class ProfilesListScreen extends ConsumerWidget {
                   child: ProfilesSearchField(),
                 ),
                 Expanded(
-                  child: profilesAsync.when(
-                    data: (List<Profile> profiles) => ProfileListView(
+                  child: ProfilesAsyncView(
+                    value: profilesAsync,
+                    onRetry: () => ref.read(profilesProvider.notifier).retry(),
+                    dataBuilder: (List<Profile> profiles) => ProfileListView(
                       profiles: profiles,
                       query: ref.watch(profilesSearchQueryProvider),
                       onProfileTap: (int id) => context.pushNamed(
@@ -67,13 +68,6 @@ class ProfilesListScreen extends ConsumerWidget {
                         return future.then<void>((_) {});
                       },
                     ),
-                    loading: ProfilesLoadingView.new,
-                    error: (Object error, StackTrace stackTrace) =>
-                        ProfilesErrorView(
-                          message: mapExceptionToFailure(error).message,
-                          onRetry: () =>
-                              ref.read(profilesProvider.notifier).retry(),
-                        ),
                   ),
                 ),
               ],

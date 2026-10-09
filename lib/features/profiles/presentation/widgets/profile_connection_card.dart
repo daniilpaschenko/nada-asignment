@@ -48,9 +48,7 @@ class ProfileConnectionCard extends StatelessWidget {
           ),
           const SizedBox(height: AppDimens.sm),
           Text(
-            hasConnection
-                ? connectedThrough!
-                : 'No connection yet.',
+            hasConnection ? connectedThrough! : 'No connection yet.',
             style: const TextStyle(
               fontSize: AppDimens.fontMd,
               color: AppColors.textPrimary,
