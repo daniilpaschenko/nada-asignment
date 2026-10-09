@@ -17,6 +17,8 @@ abstract final class AppDimens {
   static const double iconMd = 24;
   static const double iconLg = 48;
 
+  static const double avatarRadius = 24;
+
   static const double maxContentWidth = 720;
   static const double wideBreakpoint = 600;
 
