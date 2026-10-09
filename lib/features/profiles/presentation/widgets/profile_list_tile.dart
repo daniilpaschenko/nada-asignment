@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/themes/app_colors.dart';
 import '../../../../core/themes/app_dimens.dart';
 import '../../domain/entities/profile.dart';
+import 'initial_avatar.dart';
 
 class ProfileListTile extends StatelessWidget {
   const ProfileListTile({
@@ -33,7 +34,7 @@ class ProfileListTile extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _InitialAvatar(name: profile.name),
+              InitialAvatar(name: profile.name),
               const SizedBox(width: AppDimens.md),
               Expanded(
                 child: Column(
@@ -235,33 +236,5 @@ class ProfileListTile extends StatelessWidget {
       cursor = match + lowerSearch.length;
     }
     return spans;
-  }
-}
-
-class _InitialAvatar extends StatelessWidget {
-  const _InitialAvatar({required this.name});
-
-  final String? name;
-
-  @override
-  Widget build(BuildContext context) {
-    final String initial =
-        (name == null || name!.isEmpty) ? '?' : name!.trim()[0].toUpperCase();
-    final Color color =
-        AppColors.avatarPalette[(name?.hashCode ?? 0).abs() %
-            AppColors.avatarPalette.length];
-
-    return CircleAvatar(
-      radius: AppDimens.avatarRadius,
-      backgroundColor: color,
-      child: Text(
-        initial,
-        style: const TextStyle(
-          color: AppColors.onAvatar,
-          fontSize: AppDimens.fontLg,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
   }
 }

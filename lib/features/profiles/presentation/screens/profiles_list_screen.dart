@@ -8,7 +8,7 @@ import '../../../../core/themes/app_dimens.dart';
 import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profiles_providers.dart';
-import '../widgets/profile_list_tile.dart';
+import '../widgets/profile_list_view.dart';
 import '../widgets/profiles_search_field.dart';
 import '../widgets/profiles_status_views.dart';
 
@@ -33,9 +33,14 @@ class ProfilesListScreen extends ConsumerWidget {
               ),
               Expanded(
                 child: profilesAsync.when(
-                  data: (List<Profile> profiles) => _ProfilesList(
+                  data: (List<Profile> profiles) => ProfileListView(
                     profiles: profiles,
                     query: ref.watch(profilesSearchQueryProvider),
+                    onProfileTap: (int id) =>
+                        context.pushNamed(
+                      AppRoutes.profileDetailsName,
+                      pathParameters: <String, String>{'id': id.toString()},
+                    ),
                   ),
                   loading: ProfilesLoadingView.new,
                   error: (Object error, StackTrace stackTrace) =>
@@ -50,46 +55,6 @@ class ProfilesListScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ProfilesList extends StatelessWidget {
-  const _ProfilesList({required this.profiles, required this.query});
-
-  final List<Profile> profiles;
-  final String query;
-
-  @override
-  Widget build(BuildContext context) {
-    if (profiles.isEmpty) {
-      return const ProfilesEmptyView();
-    }
-
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(
-        AppDimens.lg,
-        0,
-        AppDimens.lg,
-        AppDimens.lg,
-      ),
-      itemCount: profiles.length,
-      separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(height: AppDimens.sm),
-      itemBuilder: (BuildContext context, int index) {
-        final Profile profile = profiles[index];
-        final int? id = profile.id;
-        return ProfileListTile(
-          profile: profile,
-          query: query,
-          onTap: id == null
-              ? null
-              : () => context.pushNamed(
-                  AppRoutes.profileDetailsName,
-                  pathParameters: <String, String>{'id': id.toString()},
-                ),
-        );
-      },
     );
   }
 }
