@@ -4,6 +4,8 @@ import 'app_colors.dart';
 import 'app_dimens.dart';
 
 abstract final class AppTheme {
+  static const String fontFamily = 'Mukta';
+
   static ThemeData get light {
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.primary,
@@ -12,11 +14,14 @@ abstract final class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
+      fontFamily: fontFamily,
       scaffoldBackgroundColor: AppColors.background,
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
-        elevation: AppDimens.elevationSm,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         centerTitle: false,
       ),
       cardTheme: const CardThemeData(

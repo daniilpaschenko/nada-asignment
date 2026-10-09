@@ -16,6 +16,8 @@ endpoint and shows them in a searchable list with a details screen.
   all rendered without crashes or overflow.
 - **Adaptive layout** — content is wrapped in a `ResponsiveContent` and depends
   on the screen width (max content width + breakpoint in `core/themes`).
+- **Branding** — app icon and splash screen use the Nada Network logo, and the
+  whole UI renders in the **Mukta** font (Latin + Devanagari, bundled locally).
 
 Data source (plain text, decoded as JSON in code):
 
@@ -31,6 +33,8 @@ https://gist.githubusercontent.com/jordandivyansh/c96fa18f141e0abb904e394eb91fba
 - **retrofit + dio** — HTTPS request with a plain-text response.
 - **get_it + injectable** — dependency injection.
 - **freezed + json_serializable** — models and entities.
+- **Mukta** — bundled font with Latin and Devanagari support.
+- **flutter_launcher_icons** — generates the launcher icon set from a single PNG.
 - **build_runner** — code generation.
 
 ## Prerequisites
@@ -94,6 +98,23 @@ Test coverage:
 - **Fixtures** — `test/helpers/fixtures/profiles_fixture.dart` holds the sample
   JSON used by the data tests.
 
+## Branding
+
+The app icon and launch (splash) screen are branded with the Nada Network logo
+purple `#67295F` + cream `#F5F0EE`.
+
+- `branding/app_icon.png` — 1024×1024 source used by `flutter_launcher_icons`.
+- `flutter_launcher_icons.yaml` — launcher icon config for Android and iOS.
+- Splash screens are configured natively (no runtime dependency):
+  - **Android** — `launch_background.xml` (brand background + centered logo).
+  - **iOS** — `LaunchScreen.storyboard` (brand background + `LaunchImage`).
+
+Regenerate launcher icons after changing `branding/app_icon.png`:
+
+```bash
+dart run flutter_launcher_icons
+```
+
 ## Project structure
 
 ```
@@ -116,9 +137,13 @@ lib/
 ## What I would do next
 
 - Add pagination/lazy loading and cache results for offline use.
+- Add sorting (by name/age) and a filter by community/city.
 - Introduce debounce for the search field.
+- Add a dark theme and a theme toggle.
+- Add a "favorites" feature persisted locally.
+- Share a profile and open the city on a map via deep links.
 - Add golden tests and an integration test against the real endpoint.
-- Improve accessibility (semantics labels) and add a dark theme.
+- Improve accessibility (semantics labels).
 - Localize the UI (the data already contains Hindi content).
 
 ## AI tools used

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="nada_asignment"
+        android:label="nada-asignment"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

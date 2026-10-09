@@ -61,7 +61,7 @@ void main() {
     expect(find.text('Ananya Sharma'), findsOneWidget);
     expect(find.text('27'), findsOneWidget);
     expect(find.text('Noida'), findsOneWidget);
-    expect(find.text('Female'), findsOneWidget);
+    expect(find.byIcon(Icons.female), findsOneWidget);
     expect(find.text('Brahmin'), findsOneWidget);
     expect(find.text('Product designer at a fintech'), findsOneWidget);
     expect(find.text('Connected through'), findsOneWidget);
