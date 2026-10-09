@@ -4,6 +4,15 @@ abstract final class AppColors {
   static const Color primary = Color(0xFF2F6BFF);
   static const Color primaryDark = Color(0xFF1E4FD6);
 
+  static const Color appBarGradientStart = primary;
+  static const Color appBarGradientEnd = primaryDark;
+  static const Color onPrimary = Color(0xFFFFFFFF);
+  static const Color onPrimaryMuted = Color(0xB3FFFFFF);
+  static const Color overlaySubtle = Color(0x1FFFFFFF);
+  static const Color overlayStrong = Color(0x33FFFFFF);
+  static const Color appBarGlow = Color(0x1AFFFFFF);
+  static const Color appBarShadow = Color(0x471E4FD6);
+
   static const Color genderMale = Color(0xFF4C86E6);
   static const Color genderFemale = Color(0xFFE07FA3);
 

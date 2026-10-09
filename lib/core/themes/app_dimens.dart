@@ -9,6 +9,14 @@ abstract final class AppDimens {
   static const double radiusSm = 8;
   static const double radiusMd = 12;
   static const double radiusLg = 16;
+  static const double radiusXl = 24;
+
+  static const double appBarHeight = 68;
+  static const double appBarIconButton = 40;
+  static const double appBarShadowBlur = 20;
+  static const double appBarShadowOffsetY = 6;
+  static const double appBarGlowLarge = 140;
+  static const double appBarGlowSmall = 84;
 
   static const double elevationSm = 1;
   static const double borderWidth = 1;
