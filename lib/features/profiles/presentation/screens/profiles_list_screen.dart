@@ -35,6 +35,7 @@ class ProfilesListScreen extends ConsumerWidget {
                 child: profilesAsync.when(
                   data: (List<Profile> profiles) => _ProfilesList(
                     profiles: profiles,
+                    query: ref.watch(profilesSearchQueryProvider),
                   ),
                   loading: ProfilesLoadingView.new,
                   error: (Object error, StackTrace stackTrace) =>
@@ -54,9 +55,10 @@ class ProfilesListScreen extends ConsumerWidget {
 }
 
 class _ProfilesList extends StatelessWidget {
-  const _ProfilesList({required this.profiles});
+  const _ProfilesList({required this.profiles, required this.query});
 
   final List<Profile> profiles;
+  final String query;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +81,7 @@ class _ProfilesList extends StatelessWidget {
         final int? id = profile.id;
         return ProfileListTile(
           profile: profile,
+          query: query,
           onTap: id == null
               ? null
               : () => context.pushNamed(
