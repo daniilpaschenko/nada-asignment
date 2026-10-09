@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/themes/app_dimens.dart';
+import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profiles_providers.dart';
@@ -20,9 +21,26 @@ class ProfilesListScreen extends ConsumerWidget {
     final AsyncValue<List<Profile>> profilesAsync = ref.watch(
       filteredProfilesProvider,
     );
+    final AsyncValue<List<Profile>> allProfilesAsync = ref.watch(
+      profilesProvider,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profiles')),
+      appBar: AppTopBar(
+        title: 'Profiles',
+        subtitle: allProfilesAsync.maybeWhen(
+          data: (List<Profile> profiles) =>
+              '${profiles.length} people in your network',
+          orElse: () => 'Discover people in your network',
+        ),
+        actions: <Widget>[
+          AppTopBarAction(
+            icon: Icons.refresh_rounded,
+            tooltip: 'Refresh',
+            onPressed: () => ref.read(profilesProvider.notifier).retry(),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: ResponsiveContent(
           child: Column(
@@ -36,8 +54,7 @@ class ProfilesListScreen extends ConsumerWidget {
                   data: (List<Profile> profiles) => ProfileListView(
                     profiles: profiles,
                     query: ref.watch(profilesSearchQueryProvider),
-                    onProfileTap: (int id) =>
-                        context.pushNamed(
+                    onProfileTap: (int id) => context.pushNamed(
                       AppRoutes.profileDetailsName,
                       pathParameters: <String, String>{'id': id.toString()},
                     ),

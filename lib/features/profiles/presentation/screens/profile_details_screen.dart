@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/error_mapper.dart';
+import '../../../../core/widgets/app_top_bar.dart';
 import '../../../../core/widgets/responsive_content.dart';
 import '../../domain/entities/profile.dart';
 import '../providers/profiles_providers.dart';
@@ -18,7 +19,10 @@ class ProfileDetailsScreen extends ConsumerWidget {
     final AsyncValue<List<Profile>> profilesAsync = ref.watch(profilesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile details')),
+      appBar: const AppTopBar(
+        title: 'Profile details',
+        subtitle: 'Full information',
+      ),
       body: SafeArea(
         child: profilesAsync.when(
           data: (List<Profile> profiles) {
