@@ -60,6 +60,12 @@ class ProfilesListScreen extends ConsumerWidget {
                         AppRoutes.profileDetailsName,
                         pathParameters: <String, String>{'id': id.toString()},
                       ),
+                      onRefresh: () {
+                        final Future<List<Profile>> future = ref.refresh(
+                          profilesProvider.future,
+                        );
+                        return future.then<void>((_) {});
+                      },
                     ),
                     loading: ProfilesLoadingView.new,
                     error: (Object error, StackTrace stackTrace) =>
